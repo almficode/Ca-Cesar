@@ -12,16 +12,20 @@ aviso-legal.html    → aviso legal
 privacidad.html     → política de privacidad
 cookies.html        → política de cookies
 css/styles.css      → sistema de diseño completo
-js/main.js          → animaciones, hero de vídeo, scroll, reloj
+js/main.js          → animaciones, hero de vídeo, scroll, reloj, banner de cookies
 js/menu-data.js     → LA CARTA: editar aquí platos y precios
-js/chat.js          → asistente IA "Cesarino" (API de Claude)
+js/chat.js          → asistente IA "Cesarino" (llama a /api/chat)
+api/chat.js         → función serverless de Vercel: guarda la API key en el servidor
+.env.example        → variables de entorno que hay que configurar en Vercel
 ```
 
 ## Secciones (index.html)
 
 Preloader % · **Hero con VÍDEO real del local** (`video/horno.mp4`, letterbox de cine con timecode REC del metraje, y **transición iris** de salida: el círculo se cierra sobre el vídeo descubriendo la capa crema "Benvenuti"; el centro del iris sigue al ratón) · Le Pizze (4 favoritas + **botón gigante "VER CARTA COMPLETA" → carta.html**) · Il Metodo (línea de tiempo que se dibuja con el scroll) · **La Storia**: cinta de fotogramas en movimiento + índice de capítulos en la paleta clara de la web (filas clicables → historia.html) · **Sección Cesarino IA** (explicación + botón que abre el asistente) · Reseñas (paleta clara, marquesinas en movimiento con estrellas) · Reservas (**solo botones de llamada**) · Footer oscuro.
 
-**Cesarino** además es un botón flotante con texto circular girando (abajo dcha.) que abre el overlay a pantalla completa con chips de sugerencias y el chat (API key vía [API]; sin key responde en local).
+**Cesarino** además es un botón flotante con texto circular girando (abajo dcha.) que abre el overlay a pantalla completa con chips de sugerencias y el chat.
+
+**Banner de cookies**: ya no aparece al cargar la página — se muestra justo al terminar de ver el hero (cuando el iris se cierra del todo y aparece "Benvenuti"), para no tapar la experiencia inicial.
 
 **Vídeo del hero**: `video/horno.mp4` (vídeo real del local, 1920x1080, ~7s, H.264/AAC). El poster (`video/horno-poster.png`) se generó automáticamente del primer fotograma con QuickLook. Para cambiarlo, sustituye ambos archivos manteniendo los mismos nombres, o edita las rutas en `#heroVideo` dentro de `index.html`.
 
@@ -33,12 +37,23 @@ Las imágenes actuales son **placeholders de Unsplash** marcados con comentarios
 - Fotos de Instagram (@pizzeria_cacesar) para la galería
 - Frames del vídeo del proceso para la sección Il Metodo (la estructura ya acepta N frames en `.metodo__frame`)
 
-## Asistente IA
+## Asistente IA — despliegue en Vercel
 
-- Pulsar ⚙ en la cabecera del chat para guardar la API key de Anthropic (se almacena solo en el navegador del visitante).
-- Sin API key funciona en modo local: responde horarios, reservas, carta, alérgenos y dirección.
-- Modelo y contexto del negocio configurables al inicio de `js/chat.js` (`CONFIG` y `BUSINESS_CONTEXT`).
-- Preparado para RAG: añadir textos de PDFs/catálogos en `CONFIG.ragDocs`.
+El asistente está listo para producción: la API key de Anthropic vive **solo en el servidor** (variable de entorno), nunca en el navegador del visitante. Para activarlo del todo en Vercel:
+
+1. Sube este proyecto a un repositorio y despliégalo en Vercel (o arrastra la carpeta con `vercel deploy` / el import de GitHub — no hace falta build ni framework, Vercel detecta `index.html` y la carpeta `api/` automáticamente).
+2. En el proyecto de Vercel, ve a **Settings → Environment Variables** y añade:
+   - `ANTHROPIC_API_KEY` = tu clave de [console.anthropic.com](https://console.anthropic.com/settings/keys)
+   - *(opcional)* `ANTHROPIC_MODEL` si quieres usar otro modelo distinto de `claude-opus-4-8`
+3. Vuelve a desplegar (o simplemente espera a que Vercel aplique las variables en el siguiente deploy).
+
+Con eso, **todos los visitantes** ya pueden hablar con Cesarino sin configurar nada — la función `api/chat.js` recibe la pregunta, añade la key desde el servidor y devuelve la respuesta de Claude en streaming.
+
+**Detalles técnicos:**
+- `api/chat.js` es una Vercel Edge Function (`export const config = { runtime: "edge" }`) que reenvía el stream SSE de Anthropic tal cual — no necesita `package.json` ni dependencias.
+- Contexto del negocio (horarios, carta, tono) configurable en `js/chat.js` (`BUSINESS_CONTEXT`). Preparado para RAG: añadir textos de PDFs/catálogos en `CONFIG.ragDocs`.
+- Si `api/chat.js` no responde (por ejemplo, al previsualizar la web como archivos estáticos sin funciones serverless, como en este entorno de desarrollo local), el chat degrada automáticamente a respuestas locales básicas — el visitante nunca ve un error.
+- El botón **[DEV]** en la cabecera del chat es un atajo opcional solo para pruebas locales: permite pegar tu propia API key y llamar a Anthropic directo desde el navegador sin pasar por Vercel. En producción no hace falta tocarlo.
 
 ## Vista previa local
 

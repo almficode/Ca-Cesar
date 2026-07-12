@@ -14,6 +14,10 @@
   const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // se reasigna más abajo (sección de cookies); declarado aquí para que
+  // el hero pueda llamarlo sin depender del orden de ejecución
+  let revealCookieBanner = () => {};
+
   // la secuencia del hero debe empezar siempre desde arriba
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   if (!location.hash) window.scrollTo(0, 0);
@@ -113,6 +117,10 @@
     if (!hero) return;
     const total = hero.offsetHeight - innerHeight;
     const p = clamp(scrollY / Math.max(total, 1), 0, 1);
+
+    // al terminar de ver el hero (iris cerrado del todo) aparece el
+    // aviso de cookies — no antes, para no tapar la experiencia inicial
+    if (p >= 0.98) revealCookieBanner();
 
     // fase A (0 → 0.4): el vídeo manda; el título se va desvaneciendo
     if (heroContent && !reducedMotion) {
@@ -373,11 +381,19 @@
   updateClock();
   setInterval(updateClock, 30000);
 
-  /* ── 13. Banner de cookies ────────────────────────────── */
+  /* ── 13. Banner de cookies: aparece al terminar de ver el hero ── */
   const banner = $("#cookiesBanner");
   let cookiePref = null;
   try { cookiePref = localStorage.getItem("cacesar_cookies"); } catch (_) {}
-  if (!cookiePref && banner) banner.hidden = false;
+  let cookieBannerShown = false;
+  revealCookieBanner = () => {
+    if (cookieBannerShown || cookiePref || !banner) return;
+    cookieBannerShown = true;
+    banner.hidden = false;
+  };
+  // páginas sin hero (o pantallas donde el hero no llega a medir): no
+  // bloquear el aviso indefinidamente, mostrarlo igualmente
+  if (!hero) revealCookieBanner();
   const setCookiePref = v => {
     try { localStorage.setItem("cacesar_cookies", v); } catch (_) {}
     banner.hidden = true;
