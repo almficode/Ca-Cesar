@@ -956,6 +956,9 @@ body.is-loaded .hero__bar { height: 26px; }
   font-size: 12px;
   animation: cookiesIn 0.6s var(--spring);
 }
+/* el atributo [hidden] debe ganar siempre al display:flex de arriba,
+   si no el banner se queda visible aunque el JS lo marque como oculto */
+.cookies[hidden] { display: none; }
 @keyframes cookiesIn { from { opacity: 0; transform: translateY(24px); } }
 .cookies a { text-decoration: underline; }
 .cookies__actions { display: flex; gap: 16px; justify-content: flex-end; }
