@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizzería Ca'Cesar · Pizza Artesanal en San Bartolomé, Lanzarote</title>
+  <meta name="description" content="Pizzería Ca'Cesar en San Bartolomé, Lanzarote. Pizza artesanal con masa de fermentación lenta, ingredientes frescos y horno tradicional. Reserva o pide para llevar: +34 928 52 02 76.">
+  <meta name="keywords" content="pizzería Lanzarote, pizza artesanal San Bartolomé, restaurante italiano Lanzarote, pizza para llevar Lanzarote, Ca Cesar">
+  <link rel="canonical" href="https://www.pizzeriacacesar.com/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="restaurant">
+  <meta property="og:title" content="Pizzería Ca'Cesar · Pizza Artesanal · Lanzarote">
+  <meta property="og:description" content="Masa de fermentación lenta, ingredientes frescos y pasión italiana. Comer en el local o para llevar. San Bartolomé, Lanzarote.">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&q=70">
+
+  <!-- Tipografías del sistema: Geist (sans) + Geist Mono + Inspiration (script) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Inspiration&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Schema.org: SEO local -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Pizzería Ca'Cesar",
+    "servesCuisine": ["Italiana", "Pizza"],
+    "priceRange": "€€",
+    "telephone": "+34928520276",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Calle Timbayba 5B",
+      "addressLocality": "San Bartolomé",
+      "addressRegion": "Lanzarote, Canarias",
+      "postalCode": "35550",
+      "addressCountry": "ES"
+    },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Thursday","Sunday"], "opens": "12:30", "closes": "16:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Thursday","Sunday"], "opens": "19:00", "closes": "23:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday","Saturday"], "opens": "12:30", "closes": "16:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday","Saturday"], "opens": "19:00", "closes": "23:30" }
+    ],
+    "sameAs": [
+      "https://www.instagram.com/pizzeria_cacesar/",
+      "https://www.tripadvisor.es/Restaurant_Review-g1064373-d5508152-Reviews-Pizzeria_Ca_Cesar-San_Bartolome_Lanzarote_Canary_Islands.html"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ══════════ PRELOADER (negro, contador %) ══════════ -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <span class="loader__count" id="loaderCount">00%</span>
+  </div>
+
+  <!-- Overlay de grano/ruido sutil sobre toda la web -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Barra de progreso de scroll -->
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <!-- ══════════ NAV ══════════ -->
+  <header class="nav" id="nav">
+    <a href="#top" class="nav__logo intro intro--nav" aria-label="Ca'Cesar — inicio">
+      <span class="nav__logo-line">CA'</span>
+      <span class="nav__logo-line">CE<em class="script">sar</em></span>
+    </a>
+    <button class="nav__burger intro intro--nav" id="navBurger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Menú overlay -->
+  <div class="menu" id="menu" aria-hidden="true">
+    <nav class="menu__links" aria-label="Navegación principal">
+      <a href="#pizzas"><span class="mono">001</span> LE PIZZE</a>
+      <a href="carta.html"><span class="mono">002</span> LA CARTA</a>
+      <a href="#metodo"><span class="mono">003</span> IL METODO</a>
+      <a href="historia.html"><span class="mono">004</span> LA STORIA</a>
+      <a href="#resenas"><span class="mono">005</span> RESEÑAS</a>
+      <a href="#reservas"><span class="mono">006</span> RESERVAS</a>
+    </nav>
+    <div class="menu__footer mono">
+      <a href="tel:+34928520276">+34 928 52 02 76</a>
+      <span>CALLE TIMBAYBA 5B — SAN BARTOLOMÉ, LANZAROTE</span>
+    </div>
+  </div>
+
+  <main id="top">
+
+    <!-- ══════════ HERO · vídeo del horno + transición iris ══════════ -->
+    <section class="hero" id="hero">
+      <div class="hero__sticky">
+
+        <!-- Capa que descubre el iris al salir (transición extravagante) -->
+        <div class="hero__after" aria-hidden="true">
+          <p class="hero__after-script script" id="heroAfterScript">Benvenuti</p>
+          <p class="hero__after-sub mono" id="heroAfterSub">A CASA CA'CESAR — LAS FAVORITAS DE LA CARTA ↓</p>
+        </div>
+
+        <!-- Vídeo real del horno de Ca'Cesar -->
+        <div class="hero__vidwrap" id="heroVidwrap">
+          <video class="hero__video" id="heroVideo" autoplay muted loop playsinline preload="auto"
+                 poster="video/horno-poster.png">
+            <source src="video/horno.mp4" type="video/mp4">
+          </video>
+          <div class="hero__shade"></div>
+        </div>
+
+        <!-- Letterbox de cine: se abre como un diafragma tras el preloader -->
+        <div class="hero__bar hero__bar--top" aria-hidden="true">
+          <span class="hero__timecode mono"><i class="hero__rec"></i>REC&nbsp;&nbsp;<span id="heroTC">00:00:00:00</span>&nbsp;&nbsp;·&nbsp;&nbsp;24FPS</span>
+        </div>
+        <div class="hero__bar hero__bar--bottom" aria-hidden="true"></div>
+
+        <!-- Contenido principal (se desvanece al iniciar la transición) -->
+        <div class="hero__content">
+          <p class="hero__badge mono intro intro--tag">[ PIZZERÍA ARTESANAL — SAN BARTOLOMÉ, LANZAROTE ]</p>
+          <h1 class="hero__title intro intro--title" aria-label="Ca'Cesar">
+            <span class="hero__title-line">CA'</span>
+            <span class="hero__title-line">CE<em class="script">sar</em></span>
+          </h1>
+          <p class="hero__tag mono intro intro--tag">MASA DE FERMENTACIÓN LENTA · HECHA AL MOMENTO</p>
+          <div class="hero__actions intro intro--tag">
+            <a href="tel:+34928520276" class="btn-fill">RESERVAR MESA</a>
+            <a href="carta.html" class="btn-line btn-line--light">VER LA CARTA</a>
+          </div>
+        </div>
+
+        <!-- HUD: rótulo + reloj y estado del local -->
+        <div class="hero__hud mono intro intro--tag">
+          <span class="hero__caption" id="heroCaption">EL HORNO DE CA'CESAR — EN DIRECTO</span>
+          <span class="hero__state"><span>&#9678; LANZAROTE <span id="heroClock">--:--</span></span> <span id="heroStatus">—</span></span>
+        </div>
+
+        <div class="hero__scroll mono intro intro--tag" aria-hidden="true">
+          <span>SCROLL</span><i></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ LE PIZZE · favoritas (justo tras el hero) ══════════ -->
+    <section class="works" id="pizzas">
+      <h2 class="works__heading" aria-label="Le Pizze">
+        <span data-reveal-letters>LE&nbsp;PI<em class="script">zz</em>E</span>
+      </h2>
+      <p class="works__label mono" data-reveal>[ LAS FAVORITAS DE LA CASA ]</p>
+      <p class="works__intro mono" data-fill>
+        MASA DE HASTA 48 HORAS DE FERMENTACIÓN, PRODUCTO FRESCO DEL DÍA
+        Y UN HORNO QUE NUNCA SE APAGA. SIN ATAJOS. SOLO SABOR.
+      </p>
+
+      <!-- PLACEHOLDER imgs: sustituir por fotos reales de cada pizza -->
+      <article class="work">
+        <figure class="work__media" data-clip>
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=900&q=72&auto=format" alt="Pizza Margherita artesanal">
+        </figure>
+        <div class="work__info">
+          <span class="work__num mono">001</span>
+          <h3 class="work__name">MARGARITA</h3>
+          <p class="work__desc mono">TOMATE, MOZZARELLA FRESCA, ALBAHACA.</p>
+          <span class="work__price mono">8,50€</span>
+        </div>
+      </article>
+
+      <article class="work">
+        <figure class="work__media" data-clip>
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1628840042765-356cda07504e?w=900&q=72&auto=format" alt="Pizza Ca'Cesar, la especialidad de la casa">
+        </figure>
+        <div class="work__info">
+          <span class="work__num mono">002</span>
+          <h3 class="work__name">CA'CESAR <em class="script accent">la de la casa</em></h3>
+          <p class="work__desc mono">JAMÓN, CHAMPIÑONES, HUEVO Y EL TOQUE DE LA CASA.</p>
+          <span class="work__price mono">11,90€</span>
+        </div>
+      </article>
+
+      <article class="work">
+        <figure class="work__media" data-clip>
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=900&q=72&auto=format" alt="Pizza Diavola picante">
+        </figure>
+        <div class="work__info">
+          <span class="work__num mono">003</span>
+          <h3 class="work__name">PICANTE</h3>
+          <p class="work__desc mono">SALAMI PICANTE Y GUINDILLA.</p>
+          <span class="work__price mono">10,50€</span>
+        </div>
+      </article>
+
+      <article class="work">
+        <figure class="work__media" data-clip>
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1536964549204-cce9eab227bd?w=900&q=72&auto=format" alt="Calzone al horno">
+        </figure>
+        <div class="work__info">
+          <span class="work__num mono">004</span>
+          <h3 class="work__name">CALZONE</h3>
+          <p class="work__desc mono">PIZZA CERRADA AL HORNO: JAMÓN Y REQUESÓN.</p>
+          <span class="work__price mono">11,50€</span>
+        </div>
+      </article>
+
+      <!-- Botón grande hacia la carta completa (página propia) -->
+      <a href="carta.html" class="works__big" data-reveal>
+        <span class="works__big-label">VER CARTA COMPLETA</span>
+        <span class="works__big-note mono">38 PLATOS · PIZZAS, ENTRANTES, PASTAS, CARNES, POSTRES Y BEBIDAS</span>
+        <span class="works__big-arrow" aria-hidden="true">→</span>
+      </a>
+    </section>
+
+    <!-- ══════════ IL METODO · línea de tiempo fluida ══════════ -->
+    <section class="method" id="metodo">
+      <h2 class="method__heading" aria-label="Il Metodo">
+        <span data-reveal-letters>IL&nbsp;MET<em class="script">o</em>D<em class="script">o</em></span>
+      </h2>
+
+      <div class="method__flow">
+        <div class="method__line" aria-hidden="true"><i id="methodLine"></i></div>
+        <ol class="method__steps">
+          <li class="method__step" data-reveal>
+            <span class="method__dot" aria-hidden="true"></span>
+            <span class="method__num mono">01</span>
+            <h4>LA MASA</h4>
+            <p class="mono">48H DE FERMENTACIÓN LENTA</p>
+          </li>
+          <li class="method__step" data-reveal>
+            <span class="method__dot" aria-hidden="true"></span>
+            <span class="method__num mono">02</span>
+            <h4>EL PRODUCTO</h4>
+            <p class="mono">FRESCO, SELECCIONADO CADA MAÑANA</p>
+          </li>
+          <li class="method__step" data-reveal>
+            <span class="method__dot" aria-hidden="true"></span>
+            <span class="method__num mono">03</span>
+            <h4>EL FUEGO</h4>
+            <p class="mono">AL HORNO SOLO CUANDO LA PIDES</p>
+          </li>
+          <li class="method__step" data-reveal>
+            <span class="method__dot" aria-hidden="true"></span>
+            <span class="method__num mono">04</span>
+            <h4>TU MESA</h4>
+            <p class="mono">EN MINUTOS — O PARA LLEVAR</p>
+          </li>
+        </ol>
+      </div>
+
+      <p class="method__claim" data-fill>
+        SENCILLO, HONESTO Y SIN ATAJOS. ASÍ SE HA HECHO SIEMPRE LA BUENA PIZZA.
+      </p>
+    </section>
+
+    <!-- ══════════ LA STORIA · cinta de fotogramas + capítulos ══════════ -->
+    <section class="storyband" id="historia">
+      <div class="storyband__head">
+        <p class="storyband__label mono" data-reveal>[ LA STORIA — LOS CAPÍTULOS DE LA CASA ]</p>
+        <h2 class="storyband__heading" aria-label="La Storia">
+          <span data-reveal-letters>LA&nbsp;ST<em class="script">o</em>RIA</span>
+        </h2>
+      </div>
+
+      <!-- Cinta de fotogramas en movimiento continuo (motivo de cine,
+           conecta con el timecode/letterbox del hero). PLACEHOLDER:
+           sustituir por fotogramas reales del local -->
+      <div class="filmstrip" aria-hidden="true">
+        <div class="filmstrip__track">
+          <figure><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=65&auto=format" alt=""><span class="mono">ESC.01</span></figure>
+          <figure><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1591985666643-1ecc67616216?w=500&q=65&auto=format" alt=""><span class="mono">ESC.02</span></figure>
+          <figure><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1579751626657-72bc17010498?w=500&q=65&auto=format" alt=""><span class="mono">ESC.03</span></figure>
+          <figure><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=65&auto=format" alt=""><span class="mono">ESC.04</span></figure>
+          <figure><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500&q=65&auto=format" alt=""><span class="mono">ESC.05</span></figure>
+        </div>
+      </div>
+
+      <div class="storyband__rows">
+        <a class="storyband__row" href="historia.html" data-reveal data-side="left">
+          <span class="storyband__num mono">CAP.01</span>
+          <span class="storyband__name">EL ORIGEN</span>
+          <span class="storyband__hint mono">UN LOCAL Y UNA RECETA</span>
+          <span class="storyband__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="storyband__row" href="historia.html" data-reveal data-side="right">
+          <span class="storyband__num mono">CAP.02</span>
+          <span class="storyband__name">EL MÉTODO</span>
+          <span class="storyband__hint mono">48 HORAS DE FERMENTACIÓN</span>
+          <span class="storyband__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="storyband__row" href="historia.html" data-reveal data-side="left">
+          <span class="storyband__num mono">CAP.03</span>
+          <span class="storyband__name">LA CASA LLENA</span>
+          <span class="storyband__hint mono">FAMILIAS DE TODA LA ISLA</span>
+          <span class="storyband__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="storyband__row" href="historia.html" data-reveal data-side="right">
+          <span class="storyband__num mono">HOY</span>
+          <span class="storyband__name">EL MISMO H<em class="script">o</em>RNO</span>
+          <span class="storyband__hint mono">IGUAL QUE EL PRIMER DÍA</span>
+          <span class="storyband__arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+      <div class="storyband__cta" data-reveal>
+        <a href="historia.html" class="btn-fill">LEER LA HISTORIA COMPLETA ↗</a>
+      </div>
+    </section>
+
+    <!-- ══════════ CESARINO · qué es la IA de la casa ══════════ -->
+    <section class="ai" id="ia">
+      <div class="ai__badge" aria-hidden="true" data-reveal><span>C</span></div>
+      <p class="ai__label mono" data-reveal>[ INTELIGENCIA ARTIFICIAL DE LA CASA ]</p>
+      <h2 class="ai__heading" aria-label="Cesarino">
+        <span data-reveal-letters>CESA<em class="script">r</em>INO</span>
+      </h2>
+      <p class="ai__desc mono" data-reveal>
+        NUESTRO ASISTENTE CONOCE LA CARTA ENTERA, LOS HORARIOS Y LOS ALÉRGENOS.
+        PREGÚNTALE LO QUE QUIERAS Y TE RESPONDE AL MOMENTO — A CUALQUIER HORA,
+        TAMBIÉN CUANDO EL HORNO DESCANSA.
+      </p>
+      <div class="ai__chips mono" data-reveal>
+        <span>RECOMIENDA PIZZAS</span>
+        <span>RESUELVE ALÉRGENOS</span>
+        <span>HORARIOS Y RESERVAS</span>
+        <span>DISPONIBLE 24/7</span>
+      </div>
+      <button type="button" class="btn-fill ai__open" id="aiOpen" data-reveal>HABLAR CON CESARINO →</button>
+    </section>
+
+    <!-- ══════════ RESEÑAS · marquesinas en movimiento ══════════ -->
+    <section class="reviews" id="resenas">
+      <p class="reviews__label mono" data-reveal>[ DICEN DE NOSOTROS — RESEÑAS REALES DE TRIPADVISOR ]</p>
+
+      <div class="reviews__row" data-dir="left">
+        <div class="reviews__track">
+          <blockquote class="review mono"><span class="review__stars" aria-hidden="true">★★★★★</span><p>"MASA FINA Y SABROSA, INGREDIENTES FRESCOS, TODO EN SU PUNTO PERFECTO."</p><cite>— MR. BUENDIENTE</cite></blockquote>
+          <blockquote class="review mono"><span class="review__stars" aria-hidden="true">★★★★★</span><p>"LAS PIZZAS Y EL TIRAMISÚ EXCELENTES, TRATO EXQUISITO."</p><cite>— PEDRO B.</cite></blockquote>
+          <blockquote class="review mono"><span class="review__stars" aria-hidden="true">★★★★★</span><p>"UNO DE LOS MEJORES RESTAURANTES ITALIANOS DE LA ISLA."</p><cite>— JUAN CARLOS S.</cite></blockquote>
+        </div>
+      </div>
+
+      <div class="reviews__row" data-dir="right">
+        <div class="reviews__track">
+          <blockquote class="review mono"><span class="review__stars" aria-hidden="true">★★★★★</span><p>"PIZZAS EXCELENTES, CALIDAD MUY BUENA Y PRECIOS MUY RAZONABLES."</p><cite>— ADRIANA R.</cite></blockquote>
+          <blockquote class="review mono"><span class="review__stars" aria-hidden="true">★★★★★</span><p>"COCINA ITALIANA FUERA DE LO ORDINARIO."</p><cite>— ALBA T.</cite></blockquote>
+          <blockquote class="review mono"><span class="review__stars" aria-hidden="true">★★★★★</span><p>"EL TIRAMISÚ CASERO, IMPRESCINDIBLE. VOLVEREMOS SEGURO."</p><cite>— TRIPADVISOR</cite></blockquote>
+        </div>
+      </div>
+
+      <a class="reviews__more mono" data-reveal href="https://www.tripadvisor.es/Restaurant_Review-g1064373-d5508152-Reviews-Pizzeria_Ca_Cesar-San_Bartolome_Lanzarote_Canary_Islands.html" target="_blank" rel="noopener">VER TODAS EN TRIPADVISOR ↗</a>
+    </section>
+
+    <!-- ══════════ RESERVAS · una llamada y listo ══════════ -->
+    <section class="contact" id="reservas">
+      <p class="contact__label mono" data-reveal>[ RESERVA TU MESA ]</p>
+
+      <h2 class="contact__big" data-reveal>
+        <span>UNA&nbsp;LLAMADA</span>
+        <span>Y&nbsp;LA&nbsp;MASA</span>
+        <span>YA&nbsp;ESTÁ&nbsp;EN</span>
+        <span>EL&nbsp;H<em class="script">o</em>RN<em class="script">o</em></span>
+      </h2>
+
+      <div class="contact__actions" data-reveal>
+        <a href="tel:+34928520276" class="btn-fill btn-huge">
+          <span class="mono btn-huge__label">RESERVAR MESA</span>
+          <span class="btn-huge__num">928 52 02 76</span>
+        </a>
+        <a href="tel:+34928520276" class="btn-line btn-huge">
+          <span class="mono btn-huge__label">PEDIR PARA LLEVAR</span>
+          <span class="btn-huge__num">928 52 02 76</span>
+        </a>
+      </div>
+
+      <p class="contact__note mono" data-reveal>
+        SIN FORMULARIOS — LA RESERVA SE HACE EN UNA LLAMADA DE 30 SEGUNDOS.<br>
+        12:30–16:00 · 19:00–23:00 (V+S HASTA 23:30) · MIÉRCOLES CERRADO
+      </p>
+
+      <a class="contact__map mono" data-reveal href="https://maps.google.com/?q=Pizzeria+Ca+Cesar+Calle+Timbayba+5B+San+Bartolome+Lanzarote" target="_blank" rel="noopener">CÓMO LLEGAR — CALLE TIMBAYBA 5B, SAN BARTOLOMÉ ↗</a>
+    </section>
+
+  </main>
+
+  <!-- ══════════ FOOTER (oscuro) ══════════ -->
+  <footer class="footer">
+    <p class="footer__big" aria-hidden="true">CA'CE<em class="script">sar</em></p>
+    <nav class="footer__links mono" aria-label="Enlaces">
+      <a href="https://www.instagram.com/pizzeria_cacesar/" target="_blank" rel="noopener">INSTAGRAM</a>
+      <a href="https://www.tripadvisor.es/Restaurant_Review-g1064373-d5508152-Reviews-Pizzeria_Ca_Cesar-San_Bartolome_Lanzarote_Canary_Islands.html" target="_blank" rel="noopener">TRIPADVISOR</a>
+      <a href="https://maps.google.com/?q=Pizzeria+Ca+Cesar+Calle+Timbayba+5B+San+Bartolome+Lanzarote" target="_blank" rel="noopener">CÓMO LLEGAR</a>
+      <a href="tel:+34928520276">TELÉFONO</a>
+      <a href="historia.html">LA STORIA</a>
+    </nav>
+    <div class="footer__meta mono">
+      <span>&#9678; LANZAROTE — <span id="footClock">--:--</span> GMT</span>
+      <span>CALLE TIMBAYBA 5B · SAN BARTOLOMÉ</span>
+      <span>©<span id="year">2026</span> PIZZERÍA CA'CESAR</span>
+    </div>
+    <nav class="footer__legal mono" aria-label="Enlaces legales">
+      <a href="aviso-legal.html">AVISO LEGAL</a>
+      <a href="privacidad.html">PRIVACIDAD</a>
+      <a href="cookies.html">COOKIES</a>
+    </nav>
+  </footer>
+
+  <!-- ══════════ CESARINO · botón flotante + overlay ══════════ -->
+  <button class="fab" id="chatOpen" aria-label="Abrir el asistente Cesarino">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <defs><path id="fabCircle" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"/></defs>
+      <text><textPath href="#fabCircle">CESARINO · PREGÚNTAME · CESARINO · PREGÚNTAME ·</textPath></text>
+    </svg>
+    <span class="fab__core">C</span>
+  </button>
+
+  <div class="cesarino" id="cesarino" aria-hidden="true" role="dialog" aria-label="Asistente Cesarino">
+    <div class="cesarino__head mono">
+      <span>CESARINO.AI — ASISTENTE DE CA'CESAR</span>
+      <button class="cesarino__api" id="chatSettings" aria-label="Configurar API key">[API]</button>
+      <button class="cesarino__close" id="chatClose" aria-label="Cerrar asistente">[CERRAR ×]</button>
+    </div>
+
+    <div class="cesarino__intro" id="cesarinoIntro">
+      <h2 class="cesarino__title">CIA<em class="script">o!</em></h2>
+      <p class="cesarino__sub mono">SOY CESARINO. PREGÚNTAME POR LA CARTA, LOS HORARIOS, ALÉRGENOS O TU RESERVA.</p>
+      <div class="cesarino__chips mono" id="cesarinoChips">
+        <button type="button">¿HASTA QUÉ HORA ABRÍS HOY?</button>
+        <button type="button">¿QUÉ PIZZA ME RECOMIENDAS?</button>
+        <button type="button">¿TENÉIS OPCIONES SIN GLUTEN?</button>
+        <button type="button">QUIERO PEDIR PARA LLEVAR</button>
+      </div>
+    </div>
+
+    <div class="chat__messages" id="chatMessages"></div>
+    <div class="chat__typing mono" id="chatTyping" hidden>CESARINO ESTÁ ESCRIBIENDO<span>.</span><span>.</span><span>.</span></div>
+    <form class="chat__input mono" id="chatForm">
+      <input type="text" id="chatInput" placeholder="ESCRIBE TU PREGUNTA…" autocomplete="off" aria-label="Mensaje para el asistente">
+      <button type="submit" class="chat__send" aria-label="Enviar">[ENVIAR →]</button>
+    </form>
+  </div>
+
+  <!-- ══════════ BANNER COOKIES ══════════ -->
+  <div class="cookies mono" id="cookiesBanner" hidden>
+    <p>USAMOS COOKIES PROPIAS PARA EL FUNCIONAMIENTO DE LA WEB. <a href="cookies.html">[MÁS INFO]</a></p>
+    <div class="cookies__actions">
+      <button id="cookiesReject">[RECHAZAR]</button>
+      <button id="cookiesAccept" class="accent">[ACEPTAR]</button>
+    </div>
+  </div>
+
+  <script src="js/menu-data.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/chat.js" defer></script>
+</body>
+</html>

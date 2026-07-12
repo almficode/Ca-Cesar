@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Carta · Pizzería Ca'Cesar · San Bartolomé, Lanzarote</title>
+  <meta name="description" content="La carta completa de la Pizzería Ca'Cesar: pizzas artesanales, entrantes, pastas, carnes, postres y bebidas. Para comer en el local o para llevar. San Bartolomé, Lanzarote.">
+  <link rel="canonical" href="https://www.pizzeriacacesar.com/carta.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Inspiration&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="is-loaded">
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a href="index.html" class="nav__logo" aria-label="Ca'Cesar — inicio">
+      <span class="nav__logo-line">CA'</span>
+      <span class="nav__logo-line">CE<em class="script">sar</em></span>
+    </a>
+    <a href="index.html" class="hpage__back mono">[← VOLVER]</a>
+  </header>
+
+  <main class="hpage">
+
+    <section class="hpage__hero">
+      <p class="hpage__label mono" data-reveal>[ PARA COMER AQUÍ O PARA LLEVAR — 928 52 02 76 ]</p>
+      <h1 class="hpage__title" aria-label="La Carta">
+        <span data-reveal-letters>LA&nbsp;CA<em class="script">r</em>TA</span>
+      </h1>
+      <p class="hpage__intro mono" data-reveal>
+        TODO SE PREPARA AL MOMENTO. LOS PRECIOS SON ORIENTATIVOS —
+        LOS VIGENTES SON LOS DEL LOCAL. PARA ALÉRGENOS, PREGÚNTANOS AL PEDIR.
+      </p>
+    </section>
+
+    <section class="services services--page">
+      <div class="services__list" id="cartaList">
+        <!-- Render automático desde js/menu-data.js -->
+      </div>
+
+      <div class="services__cta" data-reveal>
+        <p class="mono">¿TE HA ENTRADO HAMBRE?</p>
+        <a href="tel:+34928520276" class="btn-fill">RESERVAR O PEDIR — 928 52 02 76</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer__meta mono">
+      <span>CALLE TIMBAYBA 5B · SAN BARTOLOMÉ, LANZAROTE</span>
+      <span>12:30–16:00 · 19:00–23:00 · MIÉRCOLES CERRADO</span>
+      <span>©2026 PIZZERÍA CA'CESAR</span>
+    </div>
+  </footer>
+
+  <script src="js/menu-data.js"></script>
+  <script>
+  /* Render de la carta + animaciones de la página (autónomo) */
+  (() => {
+    "use strict";
+    const $$ = s => [...document.querySelectorAll(s)];
+
+    // letras del título
+    $$("[data-reveal-letters]").forEach(el => {
+      const wrap = node => [...node.childNodes].forEach(ch => {
+        if (ch.nodeType === 3) {
+          const f = document.createDocumentFragment();
+          [...ch.textContent].forEach(c => {
+            const s = document.createElement("span");
+            s.className = "L"; s.textContent = c === " " ? " " : c;
+            f.appendChild(s);
+          });
+          node.replaceChild(f, ch);
+        } else if (ch.nodeType === 1) wrap(ch);
+      });
+      wrap(el);
+      [...el.querySelectorAll(".L")].forEach((l, i) => l.style.setProperty("--i", i));
+    });
+
+    // construir la carta desde menu-data.js
+    const list = document.getElementById("cartaList");
+    const cats = [
+      ["pizzas", "PIZZAS"], ["entrantes", "ENTRANTES"], ["pastas", "PASTAS"],
+      ["carnes", "CARNES"], ["postres", "POSTRES"], ["bebidas", "BEBIDAS"],
+    ];
+    list.innerHTML = cats.map(([key, label], i) => `
+      <div class="svc-group" data-reveal data-side="${i % 2 ? "right" : "left"}">
+        <button type="button" class="svc-group__head" aria-expanded="false">
+          <span class="svc-group__num">00${i + 1}</span>
+          <span class="svc-group__name">${label}</span>
+          <span class="svc-group__toggle">+</span>
+        </button>
+        <div class="svc-group__items">
+          ${window.CACESAR_MENU[key].map(it => `
+            <div class="svc-item">
+              <span class="svc-item__name">${it.name.toUpperCase()}</span>
+              <span class="svc-item__desc">${it.desc.toUpperCase()}</span>
+              <span class="svc-item__price">${it.price}€</span>
+            </div>`).join("")}
+        </div>
+      </div>`).join("");
+
+    // acordeón (todas las categorías abiertas de inicio en esta página)
+    $$(".svc-group__head").forEach(head => {
+      head.addEventListener("click", () => {
+        const group = head.parentElement;
+        const items = group.querySelector(".svc-group__items");
+        const open = group.classList.toggle("is-open");
+        head.setAttribute("aria-expanded", open);
+        items.style.maxHeight = open ? items.scrollHeight + "px" : "0px";
+      });
+      head.click();
+    });
+
+    // observer de aparición
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
+    }), { threshold: 0.1, rootMargin: "0px 0px -5% 0px" });
+    $$("[data-reveal], [data-reveal-letters]").forEach(el => io.observe(el));
+
+    // barra de progreso
+    const bar = document.getElementById("progress");
+    let t = false;
+    addEventListener("scroll", () => {
+      if (t) return; t = true;
+      requestAnimationFrame(() => {
+        const h = document.documentElement.scrollHeight - innerHeight;
+        bar.style.width = `${(scrollY / Math.max(h, 1)) * 100}%`;
+        t = false;
+      });
+    }, { passive: true });
+  })();
+  </script>
+</body>
+</html>
