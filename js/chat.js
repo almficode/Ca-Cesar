@@ -1,17 +1,22 @@
 /* ═══════════════════════════════════════════════
-   CA'CESAR · Asistente IA "Cesarino"
+   CA'CESAR · Asistente IA "Cesarino" (OpenAI)
 
    Listo para producción en Vercel: llama a /api/chat, una función
-   serverless que guarda la API key de Anthropic en el servidor
-   (variable de entorno ANTHROPIC_API_KEY). El visitante nunca ve
+   serverless que guarda la API key de OpenAI en el servidor
+   (variable de entorno OPENAI_API_KEY). El visitante nunca ve
    ni introduce ninguna key — solo tienes que configurarla una vez
    en Vercel (Project Settings → Environment Variables) y desplegar.
 
-   El botón ⚙ [API] sigue existiendo como acceso opcional para
-   pruebas locales: si se guarda una key ahí, el chat llama a
-   Anthropic directamente desde el navegador con esa key en vez de
-   pasar por /api/chat (útil para probar sin desplegar). En producción
-   no hace falta usarlo.
+   El contexto que recibe el modelo se construye en directo a partir
+   de la propia web (la carta real de js/menu-data.js, la historia y
+   las reseñas que aparecen en la página) para que conteste siempre
+   con datos reales y actualizados, nunca inventados.
+
+   El botón [DEV] sigue existiendo como acceso opcional para pruebas
+   locales: si se guarda ahí tu propia API key de OpenAI, el chat
+   llama a OpenAI directamente desde el navegador en vez de pasar por
+   /api/chat (útil para probar sin desplegar). En producción no hace
+   falta usarlo.
 
    Si /api/chat no responde (por ejemplo, al previsualizar la web
    como archivos estáticos sin funciones serverless), el asistente
@@ -25,42 +30,86 @@
   "use strict";
 
   const CONFIG = {
-    apiKeyStorage: "cacesar_api_key", // solo para el override manual de pruebas
-    model: "claude-opus-4-8",
-    maxTokens: 1024,
+    apiKeyStorage: "cacesar_openai_key", // solo para el override manual de pruebas
+    model: "gpt-4o-mini",
+    maxTokens: 700,
     // RAG: añadir aquí contenido de PDFs, catálogos, FAQs, etc.
     // Cada entrada se inyecta como contexto adicional del negocio.
     ragDocs: [],
   };
 
-  const BUSINESS_CONTEXT = `
+  /* ── Carta real, en directo desde js/menu-data.js ─────────
+     Así el asistente nunca contesta con platos o precios
+     inventados o desactualizados: si editas la carta, el
+     asistente se entera solo. */
+  function buildMenuText() {
+    const cats = [
+      ["pizzas", "PIZZAS"],
+      ["entrantes", "ENTRANTES"],
+      ["pastas", "PASTAS"],
+      ["carnes", "CARNES"],
+      ["postres", "POSTRES"],
+      ["bebidas", "BEBIDAS"],
+    ];
+    const menu = window.CACESAR_MENU || {};
+    return cats
+      .map(([key, label]) => {
+        const items = menu[key] || [];
+        if (!items.length) return "";
+        const lines = items.map(it => `${it.name} — ${it.desc} (${it.price}€)`).join("; ");
+        return `${label}: ${lines}`;
+      })
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  /* ── Contexto del negocio: lo que hay en la web + lo que se
+     sabe del negocio fuera de ella (reseñas reales, redes) ── */
+  function buildBusinessContext() {
+    const ragBlock = CONFIG.ragDocs.length
+      ? "\n\nDOCUMENTACIÓN ADICIONAL:\n" + CONFIG.ragDocs.join("\n---\n")
+      : "";
+
+    return `
 Eres "Cesarino", el asistente virtual de la Pizzería Ca'Cesar en San Bartolomé, Lanzarote.
-Tu tono es cercano, amable y con algún toque italiano ocasional ("ciao", "perfetto"). Respondes SIEMPRE en el idioma del cliente (normalmente español). Respuestas breves y útiles.
+Tu tono es cercano, amable y con algún toque italiano ocasional ("ciao", "perfetto"). Respondes SIEMPRE en el idioma del cliente (normalmente español). Respuestas breves y útiles. Contesta solo con la información de este contexto — si no lo sabes, dilo con honestidad y remite al teléfono, no inventes datos.
 
 DATOS DEL NEGOCIO:
 - Dirección: Calle Timbayba 5B, 35550 San Bartolomé, Lanzarote (Islas Canarias).
-- Teléfono (reservas y pedidos para llevar): +34 928 52 02 76.
+- Teléfono (reservas y pedidos para llevar): +34 928 52 02 76. Las reservas se hacen solo por teléfono, no hay formulario online.
 - Horario: todos los días 12:30–16:00 y 19:00–23:00 (viernes y sábado hasta 23:30). MIÉRCOLES CERRADO.
-- Instagram: @pizzeria_cacesar.
+- Cómo llegar: Google Maps → "Pizzeria Ca Cesar, Calle Timbayba 5B, San Bartolome, Lanzarote".
+- Redes: Instagram @pizzeria_cacesar · reseñas en Tripadvisor (buscar "Pizzeria Ca Cesar San Bartolome").
 - Especialidad: pizza artesanal con masa de fermentación lenta (hasta 48h), productos de primera calidad, elaboración al momento. Tiramisú casero famoso. Lasaña casera muy valorada.
 - Ideal para: familias, parejas, grupos de amigos, comida para llevar.
 - Valores: calidad, elaboración artesanal, trato cercano, buena relación calidad-precio.
 
-CARTA RESUMIDA (precios en euros):
-Pizzas (8,50–11,90): Margarita 8,50 · Ca'Cesar (la de la casa: jamón, champiñones, huevo) 11,90 · Picante 10,50 · Cuatro Quesos 11,00 · Jamón y Champiñones 10,50 · Cuatro Estaciones 11,50 · Barbacoa 11,90 · Vegetal 10,00 · Atún y Cebolla 10,50 · Calzone 11,50 · Carbonara 11,00 · Hawaiana 10,00.
-Entrantes: pan de ajo 4,50 · tosta de tomate 5,50 · ensalada de mozzarella 8,50 · ensalada césar 9,00 · ensalada mixta 7,00 · provolone al horno 7,50.
-Pastas: lasaña casera 9,90 · espaguetis carbonara 9,00 · espaguetis boloñesa 9,00 · macarrones picantes 8,50 · tallarines cuatro quesos 9,50 · raviolis de requesón 9,90.
-Carnes: entrecot 16,90 · solomillo de cerdo 13,90 · pechuga de pollo 10,90 · escalope a la milanesa 11,50.
-Postres: tiramisú casero 5,50 · panacota 4,90 · bizcocho de chocolate 5,50 · helados 4,00.
-Bebidas: agua, refrescos, cerveza, vinos, café.
+LA HISTORIA DE LA CASA (para cuando pregunten quiénes son o cómo empezaron):
+- El origen: empezó en un pequeño local en la calle Timbayba, con la idea de hacer pizza sin prisas, sin congelados y con respeto por el producto.
+- El método: la fermentación lenta es la firma de la casa — la masa reposa hasta 48 horas y se estira a mano en el momento de pedirla. Cada mañana se amasa y se enciende el horno; cada pizza sale al horno solo cuando se pide, nunca antes, nunca recalentada.
+- La casa llena: con los años llegaron las familias, las parejas y las cuadrillas de toda la isla. El tiramisú casero se hizo famoso y la lasaña es de las más pedidas.
+- Hoy: siguen igual que el primer día — cocina sencilla y honesta, trato cercano, y el protagonista siempre es el sabor.
+
+LA CARTA COMPLETA (recogida en directo de la web — cíñete a esto, no inventes platos ni precios):
+${buildMenuText()}
+
+LO QUE DICEN LOS CLIENTES (reseñas reales, visibles en la web y en Tripadvisor):
+- "Masa fina y sabrosa, ingredientes frescos, todo en su punto perfecto." — Mr. Buendiente
+- "Las pizzas y el tiramisú excelentes, trato exquisito." — Pedro B.
+- "Uno de los mejores restaurantes italianos de la isla." — Juan Carlos S.
+- "Pizzas excelentes, calidad muy buena y precios muy razonables." — Adriana R.
+- "Cocina italiana fuera de lo ordinario." — Alba T.
+- "El tiramisú casero, imprescindible. Volveremos seguro." — reseña en Tripadvisor
 
 REGLAS:
 1. Si preguntan por reservar o pedir: da el teléfono +34 928 52 02 76 y anima a llamar.
-2. Si preguntan por alérgenos: indica que hay opciones vegetarianas y adaptables, y que lo comenten al pedir para asesoramiento seguro. No inventes información de alérgenos.
-3. Recomienda platos según lo que pida el cliente (familias → pizzas variadas y lasaña; parejas → especialidades + tiramisú).
-4. Si no sabes algo, dilo con honestidad y remite al teléfono.
-5. Objetivo: ayudar y acercar al cliente a reservar, pedir o visitarnos.
-`.trim();
+2. Si preguntan por alérgenos: indica que hay opciones vegetarianas y adaptables, y que lo comenten al pedir para asesoramiento seguro. No inventes información de alérgenos que no tengas.
+3. Recomienda platos según lo que pida el cliente (familias → pizzas variadas y lasaña; parejas → especialidades + tiramisú), usando siempre platos reales de la carta de arriba.
+4. Si preguntan por opiniones o reputación, apóyate en las reseñas reales de arriba.
+5. Si no sabes algo, dilo con honestidad y remite al teléfono. Nunca te inventes platos, precios, horarios o datos que no estén en este contexto.
+6. Objetivo: ayudar y acercar al cliente a reservar, pedir o visitarnos.
+`.trim() + ragBlock;
+  }
 
   const $ = s => document.querySelector(s);
   const form = $("#chatForm");
@@ -68,6 +117,8 @@ REGLAS:
   const messagesEl = $("#chatMessages");
   const typingEl = $("#chatTyping");
   const settingsBtn = $("#chatSettings");
+
+  const BUSINESS_CONTEXT = buildBusinessContext();
 
   // Historial de conversación (persiste durante la sesión)
   let history = [];
@@ -94,7 +145,7 @@ REGLAS:
   settingsBtn.addEventListener("click", () => {
     const current = getApiKey();
     const key = prompt(
-      "[Solo para pruebas locales] Pega aquí tu API key de Anthropic " +
+      "[Solo para pruebas locales] Pega aquí tu API key de OpenAI " +
       "para llamar directo desde el navegador sin pasar por Vercel.\n" +
       "En producción no hace falta: la key vive en el servidor.\n" +
       "Deja el campo vacío y acepta para borrar la key guardada.",
@@ -112,7 +163,8 @@ REGLAS:
     }
   });
 
-  /* Lee el stream SSE de Claude y va pintando el texto en vivo. */
+  /* Lee el stream SSE de OpenAI (formato "data: {...}", termina en
+     "data: [DONE]") y va pintando el texto en vivo. */
   async function streamInto(bubble, res) {
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -126,10 +178,13 @@ REGLAS:
       buffer = lines.pop();
       for (const line of lines) {
         if (!line.startsWith("data: ")) continue;
+        const payload = line.slice(6).trim();
+        if (payload === "[DONE]") continue;
         try {
-          const ev = JSON.parse(line.slice(6));
-          if (ev.type === "content_block_delta" && ev.delta?.type === "text_delta") {
-            full += ev.delta.text;
+          const ev = JSON.parse(payload);
+          const delta = ev.choices?.[0]?.delta?.content;
+          if (delta) {
+            full += delta;
             bubble.textContent = full;
             messagesEl.scrollTop = messagesEl.scrollHeight;
           }
@@ -149,10 +204,6 @@ REGLAS:
     addBubble(text, true);
     history.push({ role: "user", content: text });
 
-    const ragBlock = CONFIG.ragDocs.length
-      ? "\n\nDOCUMENTACIÓN ADICIONAL:\n" + CONFIG.ragDocs.join("\n---\n")
-      : "";
-    const system = BUSINESS_CONTEXT + ragBlock;
     const messages = history.slice(-12);
     const manualKey = getApiKey();
 
@@ -162,19 +213,16 @@ REGLAS:
     if (manualKey) {
       // ── Modo pruebas locales: llamada directa al navegador ──
       try {
-        const res = await fetch("https://api.anthropic.com/v1/messages", {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
           method: "POST",
           headers: {
             "content-type": "application/json",
-            "x-api-key": manualKey,
-            "anthropic-version": "2023-06-01",
-            "anthropic-dangerous-direct-browser-access": "true",
+            "authorization": `Bearer ${manualKey}`,
           },
           body: JSON.stringify({
             model: CONFIG.model,
             max_tokens: CONFIG.maxTokens,
-            system,
-            messages,
+            messages: [{ role: "system", content: BUSINESS_CONTEXT }, ...messages],
             stream: true,
           }),
         });
@@ -186,7 +234,7 @@ REGLAS:
       } catch (err) {
         botBubble.textContent =
           "Ups, no he podido conectar 😅 " +
-          (/401|key/i.test(err.message)
+          (/401|key|autor/i.test(err.message)
             ? "Revisa la key de pruebas en ⚙."
             : "Inténtalo de nuevo o llámanos al 928 52 02 76.");
         history.push({ role: "assistant", content: botBubble.textContent });
@@ -201,7 +249,7 @@ REGLAS:
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ system, messages }),
+        body: JSON.stringify({ system: BUSINESS_CONTEXT, messages }),
       });
       if (!res.ok) throw new Error(`Error ${res.status}`);
       await streamInto(botBubble, res);
@@ -237,6 +285,10 @@ REGLAS:
       return "Tenemos pizzas vegetarianas y opciones adaptables. Para alérgenos e intolerancias, coméntalo al hacer el pedido y te asesoramos plato a plato.";
     if (/(precio|cuánto|carta|menu|menú)/.test(t))
       return "Las pizzas van de 8,50 € (Margarita) a 11,90 € (Ca'Cesar o Barbacoa). Tienes la carta completa en la sección de arriba 👆";
-    return "¡Buena pregunta! Para eso lo mejor es llamarnos al 928 52 02 76 y te atendemos al momento. ¿Te ayudo con algo más? (horarios, carta, reservas…)";
+    if (/(historia|origen|quiénes sois|desde cuándo)/.test(t))
+      return "Empezamos en un pequeño local en la calle Timbayba con una idea sencilla: pizza sin prisas y sin congelados. Puedes leer la historia completa en la sección \"La Storia\" 📖";
+    if (/(reseñ|opinion|valoraci)/.test(t))
+      return "Tenemos muy buenas reseñas en Tripadvisor — la gente destaca la masa, el tiramisú casero y el trato cercano 🌟";
+    return "¡Buena pregunta! Para eso lo mejor es llamarnos al 928 52 02 76 y te atendemos al momento. ¿Te ayudo con algo más? (horarios, carta, historia, reservas…)";
   }
 })();

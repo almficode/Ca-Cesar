@@ -37,23 +37,29 @@ Las imágenes actuales son **placeholders de Unsplash** marcados con comentarios
 - Fotos de Instagram (@pizzeria_cacesar) para la galería
 - Frames del vídeo del proceso para la sección Il Metodo (la estructura ya acepta N frames en `.metodo__frame`)
 
-## Asistente IA — despliegue en Vercel
+## Asistente IA — despliegue en Vercel (OpenAI)
 
-El asistente está listo para producción: la API key de Anthropic vive **solo en el servidor** (variable de entorno), nunca en el navegador del visitante. Para activarlo del todo en Vercel:
+El asistente usa la **API de OpenAI** y la key vive **solo en el servidor** (variable de entorno), nunca en el navegador del visitante. Para activarlo del todo en Vercel:
 
 1. Sube este proyecto a un repositorio y despliégalo en Vercel (o arrastra la carpeta con `vercel deploy` / el import de GitHub — no hace falta build ni framework, Vercel detecta `index.html` y la carpeta `api/` automáticamente).
 2. En el proyecto de Vercel, ve a **Settings → Environment Variables** y añade:
-   - `ANTHROPIC_API_KEY` = tu clave de [console.anthropic.com](https://console.anthropic.com/settings/keys)
-   - *(opcional)* `ANTHROPIC_MODEL` si quieres usar otro modelo distinto de `claude-opus-4-8`
+   - `OPENAI_API_KEY` = tu clave de [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+   - *(opcional)* `OPENAI_MODEL` si quieres usar otro modelo distinto de `gpt-4o-mini` (por ejemplo `gpt-4o` para más calidad)
 3. Vuelve a desplegar (o simplemente espera a que Vercel aplique las variables en el siguiente deploy).
 
-Con eso, **todos los visitantes** ya pueden hablar con Cesarino sin configurar nada — la función `api/chat.js` recibe la pregunta, añade la key desde el servidor y devuelve la respuesta de Claude en streaming.
+Con eso, **todos los visitantes** ya pueden hablar con Cesarino sin configurar nada — la función `api/chat.js` recibe la pregunta, añade la key desde el servidor y devuelve la respuesta de OpenAI en streaming.
+
+**De dónde saca el conocimiento el asistente:**
+- **La carta completa** se genera en directo desde `js/menu-data.js` en cada carga de la web — si añades o cambias un plato ahí, el asistente lo sabe automáticamente, sin tocar nada más.
+- **La historia de la casa** y **reseñas reales** (Tripadvisor) están incluidas como contexto fijo en `js/chat.js` (`buildBusinessContext()`), igual que aparecen en la web.
+- Datos de contacto, horario y redes, también ahí mismo.
+- Preparado para RAG: añadir textos de PDFs/catálogos adicionales en `CONFIG.ragDocs` dentro de `js/chat.js`.
+- El asistente tiene instrucción explícita de no inventarse platos, precios ni datos que no estén en ese contexto.
 
 **Detalles técnicos:**
-- `api/chat.js` es una Vercel Edge Function (`export const config = { runtime: "edge" }`) que reenvía el stream SSE de Anthropic tal cual — no necesita `package.json` ni dependencias.
-- Contexto del negocio (horarios, carta, tono) configurable en `js/chat.js` (`BUSINESS_CONTEXT`). Preparado para RAG: añadir textos de PDFs/catálogos en `CONFIG.ragDocs`.
+- `api/chat.js` es una Vercel Edge Function (`export const config = { runtime: "edge" }`) que reenvía el stream SSE de OpenAI tal cual — no necesita `package.json` ni dependencias.
 - Si `api/chat.js` no responde (por ejemplo, al previsualizar la web como archivos estáticos sin funciones serverless, como en este entorno de desarrollo local), el chat degrada automáticamente a respuestas locales básicas — el visitante nunca ve un error.
-- El botón **[DEV]** en la cabecera del chat es un atajo opcional solo para pruebas locales: permite pegar tu propia API key y llamar a Anthropic directo desde el navegador sin pasar por Vercel. En producción no hace falta tocarlo.
+- El botón **[DEV]** en la cabecera del chat es un atajo opcional solo para pruebas locales: permite pegar tu propia API key de OpenAI y llamar directo desde el navegador sin pasar por Vercel. En producción no hace falta tocarlo.
 
 ## Vista previa local
 
