@@ -441,17 +441,39 @@ body.is-loaded .hero__bar { height: 26px; }
   border-bottom: 1px solid var(--ink);
 }
 .work:first-of-type { border-top: 1px solid var(--ink); }
-.work__media { grid-column: 1 / 5; }
+.work__media {
+  grid-column: 1 / 5;
+  position: relative;
+  border-radius: 14px;
+  transform: perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1);
+  transition: transform 0.15s ease-out, box-shadow 0.4s;
+  will-change: transform;
+}
 .work:nth-of-type(even) .work__media { grid-column: 9 / -1; order: 2; }
 .work__media img {
   width: 100%;
   aspect-ratio: 16/9;
   object-fit: cover;
+  border-radius: inherit;
   transform: scale(1.04) translateY(var(--py, 0));
   will-change: transform;
   transition: clip-path 1.2s var(--spring);
 }
 .work__media:hover img { transform: scale(1.1) translateY(var(--py, 0)); }
+
+/* Efecto 3D (tarjeta que se inclina hacia el cursor) — solo con ratón */
+.work__media.is-3d-hover {
+  box-shadow: 0 32px 60px -24px rgba(18, 16, 13, 0.4);
+}
+.work__media__glare {
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.4), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.work__media.is-3d-hover .work__media__glare { opacity: 1; }
 .work__info {
   grid-column: 5 / -1;
   display: grid;
@@ -1093,4 +1115,5 @@ body.is-loaded .hero__bar { height: 26px; }
   .reviews__track { animation: none; }
   .fab svg { animation: none; }
   .grain { display: none; }
+  .work__media { transform: none !important; }
 }

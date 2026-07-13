@@ -404,4 +404,44 @@
   /* ── 14. Año del footer ───────────────────────────────── */
   const yearEl = $("#year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  /* ── 15. Efecto 3D en las fotos de "Le Pizze" ──────────────
+     Tarjeta que se inclina en perspectiva siguiendo al cursor,
+     con un brillo (glare) que se desplaza con el ratón — la
+     misma idea del componente "3D Card" adaptada a vanilla JS. */
+  if (matchMedia("(hover: hover)").matches && !reducedMotion) {
+    const MAX_TILT = 10; // grados máximos de inclinación
+
+    $$(".work__media").forEach(card => {
+      const glare = document.createElement("div");
+      glare.className = "work__media__glare";
+      glare.setAttribute("aria-hidden", "true");
+      card.appendChild(glare);
+
+      let raf = null;
+
+      card.addEventListener("mousemove", e => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;   // 0 → 1
+        const py = (e.clientY - r.top) / r.height;   // 0 → 1
+        const rotateY = (px - 0.5) * MAX_TILT * 2;
+        const rotateX = (0.5 - py) * MAX_TILT * 2;
+
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          card.style.transform =
+            `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.03, 1.03, 1.03)`;
+          card.style.setProperty("--glare-x", `${(px * 100).toFixed(1)}%`);
+          card.style.setProperty("--glare-y", `${(py * 100).toFixed(1)}%`);
+          card.classList.add("is-3d-hover");
+          raf = null;
+        });
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "";
+        card.classList.remove("is-3d-hover");
+      });
+    });
+  }
 })();
