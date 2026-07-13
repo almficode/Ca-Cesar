@@ -17,7 +17,28 @@ js/menu-data.js     → LA CARTA: editar aquí platos y precios
 js/chat.js          → asistente IA "Cesarino" (llama a /api/chat)
 api/chat.js         → función serverless de Vercel: guarda la API key en el servidor
 .env.example        → variables de entorno que hay que configurar en Vercel
+favicon.ico / .svg / favicon-*.png / apple-touch-icon.png / android-chrome-*.png
+                    → favicon completo (ver sección "Favicon y SEO técnico")
+site.webmanifest    → metadatos del icono para Android/PWA
+robots.txt          → permite el rastreo completo y apunta al sitemap
+sitemap.xml         → listado de páginas para que Google las descubra antes
 ```
+
+## Favicon y SEO técnico
+
+El favicon se generó con Pillow (marca "C" en rojo `#c8321e`, el mismo mark que el botón del asistente) en todos los formatos y tamaños que recomienda Google para que lo recoja sin problemas:
+
+- `favicon.ico` (16/32/48 en un solo archivo, para navegadores y crawlers que piden la ruta clásica `/favicon.ico`)
+- `favicon.svg` (vectorial, el formato que Google prioriza cuando está disponible)
+- `favicon-16x16.png`, `favicon-32x32.png`, `favicon-48x48.png` (48px es el mínimo que recomienda Google)
+- `apple-touch-icon.png` (180×180, iconos de iOS)
+- `android-chrome-192x192.png` / `-512x512.png` + `site.webmanifest` (Android/PWA)
+
+Todos enlazados desde el `<head>` de las 6 páginas HTML. Para cambiar el diseño del icono, edita `/tmp/gen_favicon.py` (o pide que lo regenere) y sustituye los archivos manteniendo los mismos nombres.
+
+**Para que Google lo indexe lo antes posible:**
+1. `robots.txt` y `sitemap.xml` ya están listos (recuerda cambiar el dominio de ejemplo `pizzeriacacesar.com` por el dominio real una vez lo tengas en Vercel).
+2. Una vez publicada la web con su dominio definitivo, entra en [Google Search Console](https://search.google.com/search-console), añade la propiedad, sube/verifica el `sitemap.xml` y usa "Inspección de URLs → Solicitar indexación" en la página principal — es lo que de verdad acelera que Google la rastree, más que cualquier ajuste técnico.
 
 ## Secciones (index.html)
 
